@@ -69,13 +69,12 @@ public:
             discount_rate = discount;
     }
 
-    void getInvoiceAmount() const {
+    double getInvoiceAmount() const {
         double total = quantity * price_per_item;
         double discount_amount = total * discount_rate;
         double vat_amount = (total - discount_amount) * vat_rate;
         double final_amount = total - discount_amount + vat_amount;
-
-        cout << "Invoice Amount: $" << final_amount << endl;
+        return final_amount;
     }
 
     
