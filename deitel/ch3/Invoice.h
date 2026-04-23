@@ -38,7 +38,8 @@ public:
         return quantity;
     }
     void setQuantity(int quant) {
-        quantity = quant;
+        if (quant > 0)
+            quantity = quant;
     }
 
     // Price per item getter and setter
@@ -46,7 +47,8 @@ public:
         return price_per_item;
     }
     void setPricePerItem(int price) {
-        price_per_item = price;
+        if (price > 0)
+            price_per_item = price;
     }
 
     // VAT rate getter and setter
@@ -54,7 +56,8 @@ public:
         return vat_rate;
     }
     void setVatRate(double vat) {
-        vat_rate = vat;
+        if (vat > 0)
+            vat_rate = vat;
     }
 
     // Discount rate getter and setter
@@ -62,7 +65,17 @@ public:
         return discount_rate;
     }
     void setDiscountRate(double discount) {
-        discount_rate = discount;
+        if (discount > 0)
+            discount_rate = discount;
+    }
+
+    void getInvoiceAmount() const {
+        double total = quantity * price_per_item;
+        double discount_amount = total * discount_rate;
+        double vat_amount = (total - discount_amount) * vat_rate;
+        double final_amount = total - discount_amount + vat_amount;
+
+        cout << "Invoice Amount: $" << final_amount << endl;
     }
 
     
