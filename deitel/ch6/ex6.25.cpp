@@ -3,24 +3,43 @@ using namespace std;
 
 int minutesSinceStartOfMonth(int days, int hours, int minutes)
 {
+    // Each full day has 24 hours, and each hour has 60 minutes.
     return days * 24 * 60 + hours * 60 + minutes;
 }
 
 int main()
 {
-    int days1, hours1, minutes1;
-    int days2, hours2, minutes2;
+    int firstDays;
+    int firstHours;
+    int firstMinutes;
 
-    cout << "Enter first time (days hours minutes): ";
-    cin >> days1 >> hours1 >> minutes1;
+    int secondDays;
+    int secondHours;
+    int secondMinutes;
 
-    cout << "Enter second time (days hours minutes): ";
-    cin >> days2 >> hours2 >> minutes2;
+    cout << "Enter the first time." << endl;
+    cout << "Days: ";
+    cin >> firstDays;
+    cout << "Hours: ";
+    cin >> firstHours;
+    cout << "Minutes: ";
+    cin >> firstMinutes;
 
-    int firstTime{minutesSinceStartOfMonth(days1, hours1, minutes1)};
-    int secondTime{minutesSinceStartOfMonth(days2, hours2, minutes2)};
+    cout << "\nEnter the second time." << endl;
+    cout << "Days: ";
+    cin >> secondDays;
+    cout << "Hours: ";
+    cin >> secondHours;
+    cout << "Minutes: ";
+    cin >> secondMinutes;
 
-    int difference{secondTime - firstTime};
+    int firstTotalMinutes{
+        minutesSinceStartOfMonth(firstDays, firstHours, firstMinutes)};
+
+    int secondTotalMinutes{
+        minutesSinceStartOfMonth(secondDays, secondHours, secondMinutes)};
+
+    int difference{secondTotalMinutes - firstTotalMinutes};
 
     if (difference < 0)
     {
