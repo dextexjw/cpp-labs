@@ -16,7 +16,7 @@ int isPrimeHalf(int number) {
 int isPrimeSquareRoot(int number) {
     if (number <= 1) return 0; // Not prime
 
-    for (int i = 2; i * i <= number; ++i) {
+    for (int i = 2; i <= number / i; ++i) {
         if (number % i == 0) return 0; // Not prime
     }
 
