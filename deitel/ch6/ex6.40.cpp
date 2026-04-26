@@ -19,8 +19,7 @@ int main() {
 
 unsigned long factorial(unsigned long number, unsigned int depth) {
    printIndent(depth);
-   cout << "factorial(" << number << ") begins; local number = " << number
-        << endl;
+   cout << "factorial(" << number << ") begins; local number = " << number << endl;
 
    if (number <= 1) {
       printIndent(depth);
