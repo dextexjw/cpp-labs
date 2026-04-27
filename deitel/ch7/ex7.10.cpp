@@ -9,7 +9,7 @@ int main()
 
     array<int, noOfServers> servers{};
 
-    for (int i : servers)
+    for (int& i : servers)
     {
         i = rand() % 90 + 20;
         cout << i << " ";
