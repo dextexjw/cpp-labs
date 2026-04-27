@@ -14,7 +14,7 @@ int gcd(int a, int b) {
 int main(){
 
     cout << gcd(6, 18) << endl;
-    cout << gcd(48, 18) << endl;
+    cout << gcd(12, 18) << endl;
 
     return 0;
 }
