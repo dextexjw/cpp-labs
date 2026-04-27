@@ -15,11 +15,6 @@ int main()
         cout << i << " ";
     }
 
-    for (size_t i : servers)
-    {
-        cout << i << " ";
-    }
-
     cout << endl
          << endl
          << "Salary distribution:" << endl;
@@ -66,13 +61,9 @@ int main()
         }
     }
 
-    // for (size_t i = 0; i < salaryRange.size(); ++i){
-    //   cout << "Salary range " << (i*10) << "-" << (i*10 + 9) << ": " << salaryRange[i] << endl;
-    // }
-
-    for (size_t i : salaryRange)
-    {
-        cout << i << " ";
+    // range start from 20 to 29, 30 to 39, ..., 90 to 99
+    for (size_t i = 0; i < salaryRange.size(); ++i){
+        cout << (i * 10 + 20) << " - " << (i * 10 + 29) << ": " << salaryRange[i] << endl;
     }
 
     return 0;
