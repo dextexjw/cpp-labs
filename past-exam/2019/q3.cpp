@@ -83,8 +83,7 @@ int main() {
     makeUpperCase(y);
     makeUpperCase(z);
 
-    if (!containsOnlyLetters(x) || !containsOnlyLetters(y) ||
-        !containsOnlyLetters(z)) {
+    if (!containsOnlyLetters(x) || !containsOnlyLetters(y) || !containsOnlyLetters(z)) {
         cout << "Invalid input. Please use letters only (A-Z).\n";
         return 0;
     }
@@ -97,7 +96,7 @@ int main() {
         }
     }
 
-    cout << "Letters: " << uniqueLetters << endl;
+    cout << "Unique letters: " << uniqueLetters << endl;
 
     int totalLetters = uniqueLetters.size();
     if (totalLetters > 10) {
