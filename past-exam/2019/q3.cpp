@@ -32,7 +32,7 @@ bool containsOnlyLetters(const string& text) {
 // Backtracking function:
 // Try assigning digits to unique letters one by one.
 bool solvePuzzle(int index, const string& uniqueLetters, int letterToDigit[],
-                 bool usedDigits[], const string& x, const string& y,
+                 bool usedDigits[], const string& x, const string& y, 
                  const string& z) {
     int totalLetters = uniqueLetters.size();
 
