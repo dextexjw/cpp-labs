@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-// Convert a word (example: SEND) to a number using letter -> digit mapping.
+// Convert a word (example: SEND) into a number using the current mapping.
 int toNumber(const string& word, int letterToDigit[]) {
     int value = 0;
     for (char c : word) {
@@ -29,26 +29,25 @@ bool containsOnlyLetters(const string& text) {
     return true;
 }
 
-// Backtracking function:
-// Try assigning digits to unique letters one by one.
+// Try assigning digits to letters one by one (backtracking).
 bool solvePuzzle(int index, const string& uniqueLetters, int letterToDigit[],
-                 bool usedDigits[], const string& x, const string& y, 
-                 const string& z) {
+                 bool usedDigits[], const string& word1, const string& word2,
+                 const string& resultWord) {
     int totalLetters = uniqueLetters.size();
 
     // Base case: all letters assigned. Now test equation.
     if (index == totalLetters) {
         // Leading letter of a word cannot be 0.
-        if (letterToDigit[x[0] - 'A'] == 0 ||
-            letterToDigit[y[0] - 'A'] == 0 ||
-            letterToDigit[z[0] - 'A'] == 0) {
+        if (letterToDigit[word1[0] - 'A'] == 0 ||
+            letterToDigit[word2[0] - 'A'] == 0 ||
+            letterToDigit[resultWord[0] - 'A'] == 0) {
             return false;
         }
 
-        int numX = toNumber(x, letterToDigit);
-        int numY = toNumber(y, letterToDigit);
-        int numZ = toNumber(z, letterToDigit);
-        return (numX + numY == numZ);
+        int value1 = toNumber(word1, letterToDigit);
+        int value2 = toNumber(word2, letterToDigit);
+        int resultValue = toNumber(resultWord, letterToDigit);
+        return (value1 + value2 == resultValue);
     }
 
     int letterIndex = uniqueLetters[index] - 'A';
@@ -62,8 +61,7 @@ bool solvePuzzle(int index, const string& uniqueLetters, int letterToDigit[],
         letterToDigit[letterIndex] = digit;
         usedDigits[digit] = true;
 
-        if (solvePuzzle(index + 1, uniqueLetters, letterToDigit, usedDigits, x,
-                        y, z)) {
+        if (solvePuzzle(index + 1, uniqueLetters, letterToDigit, usedDigits, word1, word2, resultWord)) {
             return true;
         }
 
@@ -75,22 +73,24 @@ bool solvePuzzle(int index, const string& uniqueLetters, int letterToDigit[],
 }
 
 int main() {
-    string x, y, z;
-    cout << "Enter x, y, z: ";
-    cin >> x >> y >> z;
+    string word1, word2, resultWord;
+    cout << "Enter word1 word2 resultWord: ";
+    cin >> word1 >> word2 >> resultWord;
 
-    makeUpperCase(x);
-    makeUpperCase(y);
-    makeUpperCase(z);
+    // Make input uppercase so users can type in any case.
+    makeUpperCase(word1);
+    makeUpperCase(word2);
+    makeUpperCase(resultWord);
 
-    if (!containsOnlyLetters(x) || !containsOnlyLetters(y) || !containsOnlyLetters(z)) {
+    // Validate input.
+    if (!containsOnlyLetters(word1) || !containsOnlyLetters(word2) || !containsOnlyLetters(resultWord)) {
         cout << "Invalid input. Please use letters only (A-Z).\n";
         return 0;
     }
 
-    // Build list of unique letters.
+    // Collect unique letters from all three words.
     string uniqueLetters = "";
-    for (char c : x + y + z) {
+    for (char c : word1 + word2 + resultWord) {
         if (uniqueLetters.find(c) == string::npos) {
             uniqueLetters += c;
         }
@@ -107,7 +107,7 @@ int main() {
     int letterToDigit[26] = {0};
     bool usedDigits[10] = {false};
 
-    if (solvePuzzle(0, uniqueLetters, letterToDigit, usedDigits, x, y, z)) {
+    if (solvePuzzle(0, uniqueLetters, letterToDigit, usedDigits, word1, word2, resultWord)) {
         cout << "Solution:\n";
         for (int i = 0; i < totalLetters; i++) {
             cout << uniqueLetters[i] << " = "
