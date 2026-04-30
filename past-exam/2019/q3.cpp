@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-// Convert a word (example: SEND) into a number using the current mapping.
+// Convert a word (example: SEND) into a number using the current letter->digit map.
 int toNumber(const string& word, int letterToDigit[]) {
     int value = 0;
     for (char c : word) {
@@ -29,68 +29,122 @@ bool containsOnlyLetters(const string& text) {
     return true;
 }
 
-// Try assigning digits to letters one by one (backtracking).
-bool solvePuzzle(int index, const string& uniqueLetters, int letterToDigit[],
-                 bool usedDigits[], const string& word1, const string& word2,
-                 const string& resultWord) {
-    int totalLetters = uniqueLetters.size();
+bool hasLeadingZero(const string& x, const string& y, const string& z,
+                    int letterToDigit[]) {
+    return letterToDigit[x[0] - 'A'] == 0 ||
+           letterToDigit[y[0] - 'A'] == 0 ||
+           letterToDigit[z[0] - 'A'] == 0;
+}
 
-    // Base case: all letters assigned. Now test equation.
-    if (index == totalLetters) {
-        // Leading letter of a word cannot be 0.
-        if (letterToDigit[word1[0] - 'A'] == 0 ||
-            letterToDigit[word2[0] - 'A'] == 0 ||
-            letterToDigit[resultWord[0] - 'A'] == 0) {
-            return false;
-        }
+bool equationHolds(const string& x, const string& y, const string& z,
+                   int letterToDigit[]) {
+    int xValue = toNumber(x, letterToDigit);
+    int yValue = toNumber(y, letterToDigit);
+    int zValue = toNumber(z, letterToDigit);
+    return (xValue + yValue == zValue);
+}
 
-        int value1 = toNumber(word1, letterToDigit);
-        int value2 = toNumber(word2, letterToDigit);
-        int resultValue = toNumber(resultWord, letterToDigit);
-        return (value1 + value2 == resultValue);
+// Iterative backtracking:
+// - "depth" = which unique letter we are assigning now.
+// - Try a free digit, go deeper.
+// - If stuck, undo and go back (backtrack).
+bool solvePuzzle(const string& uniqueLetters, int letterToDigit[],
+                 bool usedDigits[], const string& x, const string& y,
+                 const string& z) {
+    int totalUniqueLetters = uniqueLetters.size();
+
+    // For each depth, remember:
+    // - which digit to start trying from next time
+    // - which digit we chose (so we can undo it on backtrack)
+    int nextDigitToTryAtDepth[26] = {0};
+    int chosenDigitAtDepth[26];
+    for (int i = 0; i < 26; i++) {
+        chosenDigitAtDepth[i] = -1;
     }
 
-    int letterIndex = uniqueLetters[index] - 'A';
+    int depth = 0;
 
-    // Try every unused digit (0 to 9).
-    for (int digit = 0; digit <= 9; digit++) {
-        if (usedDigits[digit]) {
+    while (depth >= 0) {
+        // If all letters got digits, test full assignment.
+        if (depth == totalUniqueLetters) {
+            if (!hasLeadingZero(x, y, z, letterToDigit) &&
+                equationHolds(x, y, z, letterToDigit)) {
+                return true; // Found a valid mapping.
+            }
+
+            // Full assignment failed -> go back one step.
+            depth--;
+            if (depth >= 0) {
+                int previousDigit = chosenDigitAtDepth[depth];
+                if (previousDigit != -1) {
+                    usedDigits[previousDigit] = false;
+                    chosenDigitAtDepth[depth] = -1;
+                }
+            }
             continue;
         }
 
-        letterToDigit[letterIndex] = digit;
-        usedDigits[digit] = true;
+        int currentLetterIndex = uniqueLetters[depth] - 'A';
+        bool placedDigit = false;
 
-        if (solvePuzzle(index + 1, uniqueLetters, letterToDigit, usedDigits, word1, word2, resultWord)) {
-            return true;
+        // Try digits for the current letter.
+        for (int digit = nextDigitToTryAtDepth[depth]; digit <= 9; digit++) {
+            if (usedDigits[digit]) {
+                continue;
+            }
+
+            letterToDigit[currentLetterIndex] = digit;
+            usedDigits[digit] = true;
+            chosenDigitAtDepth[depth] = digit;
+            nextDigitToTryAtDepth[depth] = digit + 1;
+
+            // Go one step deeper to assign the next letter.
+            depth++;
+            if (depth < 26) {
+                nextDigitToTryAtDepth[depth] = 0;
+            }
+            placedDigit = true;
+            break;
         }
 
-        // Undo assignment (backtrack).
-        usedDigits[digit] = false;
+        if (placedDigit) {
+            continue;
+        }
+
+        // No digit worked here. Reset this depth and backtrack.
+        nextDigitToTryAtDepth[depth] = 0;
+        depth--;
+        if (depth >= 0) {
+            int previousDigit = chosenDigitAtDepth[depth];
+            if (previousDigit != -1) {
+                usedDigits[previousDigit] = false;
+                chosenDigitAtDepth[depth] = -1;
+            }
+        }
     }
 
     return false;
 }
 
 int main() {
-    string word1, word2, resultWord;
-    cout << "Enter word1 word2 resultWord: ";
-    cin >> word1 >> word2 >> resultWord;
+    string x, y, z;
+    cout << "Enter x y z: ";
+    cin >> x >> y >> z;
 
     // Make input uppercase so users can type in any case.
-    makeUpperCase(word1);
-    makeUpperCase(word2);
-    makeUpperCase(resultWord);
+    makeUpperCase(x);
+    makeUpperCase(y);
+    makeUpperCase(z);
 
     // Validate input.
-    if (!containsOnlyLetters(word1) || !containsOnlyLetters(word2) || !containsOnlyLetters(resultWord)) {
+    if (!containsOnlyLetters(x) || !containsOnlyLetters(y) || !containsOnlyLetters(z)) {
         cout << "Invalid input. Please use letters only (A-Z).\n";
         return 0;
     }
 
-    // Collect unique letters from all three words.
+    // Step 1: collect unique letters used in x, y, z.
     string uniqueLetters = "";
-    for (char c : word1 + word2 + resultWord) {
+    for (char c : x + y + z) {
         if (uniqueLetters.find(c) == string::npos) {
             uniqueLetters += c;
         }
@@ -98,16 +152,20 @@ int main() {
 
     cout << "Unique letters: " << uniqueLetters << endl;
 
+    // More than 10 unique letters means impossible (only digits 0-9 exist).
     int totalLetters = uniqueLetters.size();
     if (totalLetters > 10) {
         cout << "No solution found\n";
         return 0;
     }
 
+    // letterToDigit[L - 'A'] gives the digit assigned to letter L.
     int letterToDigit[26] = {0};
+    // usedDigits[d] says whether digit d is already taken by another letter.
     bool usedDigits[10] = {false};
 
-    if (solvePuzzle(0, uniqueLetters, letterToDigit, usedDigits, word1, word2, resultWord)) {
+    // Step 2: search for a valid assignment.
+    if (solvePuzzle(uniqueLetters, letterToDigit, usedDigits, x, y, z)) {
         cout << "Solution:\n";
         for (int i = 0; i < totalLetters; i++) {
             cout << uniqueLetters[i] << " = "
