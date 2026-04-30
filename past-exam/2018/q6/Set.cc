@@ -1,4 +1,3 @@
-#include "Set.h"
 
 template <class T>
 Set<T>::Set() {
@@ -13,7 +12,7 @@ Set<T>::Set(initializer_list<T> list) {
 
 template <class T>
 bool Set<T>::contains(const T& value) const {
-    for (const T& item : items) {
+    for (const T& item : this->items) {
         if (item == value) {
             return true;
         }
@@ -27,7 +26,7 @@ bool Set<T>::add(const T& value) {
         return false;
     }
 
-    items.push_back(value);
+    this->items.push_back(value);
     return true;
 }
 
