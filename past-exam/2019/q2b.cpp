@@ -40,7 +40,7 @@ int main() {
             cout << "Location is row " << row
                  << ", column " << minCol << endl;
             return 0;
-        } else {
+        } 
     }
 
     cout << "No saddle element found" << endl;
