@@ -11,6 +11,7 @@ int main() {
 
     cout << "Enter array values:" << endl;
     for (int i = 0; i < n; i++) {
+        cout << "Enter row " << i << ": ";
         for (int j = 0; j < n; j++) {
             cin >> a[i][j];
         }
@@ -39,8 +40,10 @@ int main() {
             cout << "Location is row " << row
                  << ", column " << minCol << endl;
             return 0;
-        }
+        } else {
     }
+
+    cout << "No saddle element found" << endl;
 
     return 0;
 }
