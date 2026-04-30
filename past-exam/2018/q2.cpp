@@ -19,6 +19,10 @@ int main() {
 
     bool selfDescribing = true;
 
+    // cout << "Digits: ";
+    // for (int i : digits) cout << i << " ";
+    // cout << endl;
+
     for (int i = 0; i < n; i++) {
         int count = 0;
 
