@@ -6,7 +6,6 @@ int main() {
     cout << "Enter size: ";
     cin >> n;
 
-    // 2D array on the heap: n rows, each row has n ints
     int** square = new int*[n];
 
     for (int i = 0; i < n; i++) {
@@ -21,7 +20,6 @@ int main() {
         }
     }
 
-    // Magic constant: in a magic square, every row/col/diagonal matches the first row's sum
     int target = 0;
 
     for (int j = 0; j < n; j++) {
@@ -56,7 +54,7 @@ int main() {
         }
     }
 
-    // Main diagonal (top-left to bottom-right)
+    // Check main diagonal
     int diag1 = 0;
 
     for (int i = 0; i < n; i++) {
@@ -67,7 +65,7 @@ int main() {
         magic = false;
     }
 
-    // Anti-diagonal (top-right to bottom-left)
+    // Check other diagonal
     int diag2 = 0;
 
     for (int i = 0; i < n; i++) {
@@ -84,7 +82,6 @@ int main() {
         cout << "The square is not a magic square." << endl;
     }
 
-    // Match each new[] with delete[]: rows first, then the pointer array
     for (int i = 0; i < n; i++) {
         delete[] square[i];
     }

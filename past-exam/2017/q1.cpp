@@ -8,10 +8,8 @@ bool possible(int bars)
         if (bars % 3 != 1)
             return false;
 
-        // bars is 3*k + 1 for some k (because bars % 3 == 1)
-        int k = bars / 3;
-        int taken_by_thief = k + 1;   // one equal third (k bars) plus the extra bar
-        bars = bars - taken_by_thief; // same as 2 * k; pile left for the next night
+        // thief takes one third plus the extra bar
+        bars = 2 * (bars / 3);
     }
 
     // final morning division must also leave 1 bar
